@@ -35,6 +35,8 @@ def create_event(request):
         event=Event.objects.create(title=title,description=description,date=date_object,time=time_object,location=location,slots=slots,event_creator=user)
         event.save()
         return Response({"success":"event created successfully"})
+    else:
+        return Response({"error":"you are not authorized to create event"})
 
         
 
@@ -55,7 +57,7 @@ def register_event(request,eventid):
         if slots>0:
             check=Registered_events.objects.filter(event_id=eventid,participants_id=userid)
             if check:
-                return Response({"success":"Already registerd for event"})
+                return Response({"error":"Already registerd for event"})
                 
             else:
                 reg_event=Registered_events.objects.create(event=event,participants=user)
