@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Login</title>
+</head>
+<body>
+    <h2>Login</h2>
+    <form id="loginForm" method="post">
+        {% csrf_token %}
+        <label for="username">Username:</label>
+        <input type="text" name="username" required><br>
+        <label for="password">Password:</label>
+        <input type="password" name="password" required><br>
+        <input type="submit" value="Login">
+    </form>
+
+    <script>
+        document.getElementById('loginForm').addEventListener('submit', function (event) {
+            event.preventDefault();
+
+            // Get form data
+            const formData = new FormData(event.target);
+
+            // Make an AJAX request to your DRF login endpoint
+            fetch('localhost:8000/auth/loginapi', {
+                method: 'POST',
+                headers: {
+                    'Accept': 'application/json',
+                    'X-CSRFToken': '{{ csrf_token }}', // Include CSRF token for Django
+                },
+                body: formData,
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.Success) {
+                    // Handle successful login (e.g., redirect to a new page)
+                    window.location.href = '/success/';
+                } else {
+                    // Handle failed login (show an error message, etc.)
+                    alert('Login failed. Please check your credentials.');
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+            });
+        });
+    </script>
+</body>
+</html>
